@@ -5,24 +5,31 @@ body {
   text-align: center;
 }
 
-.hidden { display: none; }
+/* Hide helper */
+.hidden {
+  display: none;
+}
 
+/* START SCREEN */
 #startScreen {
   margin-top: 120px;
 }
 
+/* BUTTON BASE */
 button {
   padding: 10px 20px;
   margin-top: 20px;
   cursor: pointer;
 }
 
+/* TOP BAR */
 .topBar {
   display: flex;
   justify-content: space-around;
   padding: 10px;
 }
 
+/* PROGRESS BAR */
 .progress {
   width: 80%;
   height: 8px;
@@ -34,43 +41,75 @@ button {
   height: 8px;
   width: 0%;
   background: lime;
+  transition: width 0.3s ease;
 }
 
+/* QUESTION */
 #questionBox {
   font-size: 22px;
   margin: 30px;
 }
 
-#options button {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
-  width: 60%;
+/* OPTIONS WRAPPER */
+#options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
 }
+
+/* OPTION BUTTON BASE */
 .option-btn {
-    padding: 12px;
-    margin: 8px;
-    border-radius: 10px;
-    border: none;
-    background: #eee;
-    cursor: pointer;
-    transition: 0.3s;
+  width: 60%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  background: #eee;
+  color: #000;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 16px;
 }
 
+/* 🔥 HOVER EFFECT */
 .option-btn:hover {
-    transform: scale(1.02);
+  transform: scale(1.03);
+  background: #dcdcdc;
+  border-color: #888;
 }
 
+/* ✅ SELECTED STATE (IMPORTANT) */
+.option-btn.selected {
+  background: #4CAF50;
+  color: white;
+  border-color: #2e7d32;
+  box-shadow: 0 0 12px rgba(76, 175, 80, 0.6);
+  transform: scale(1.05);
+}
 
+/* OPTIONAL: DISABLED LOOK */
+.option-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* FINAL MESSAGE */
 #finalMessage {
-margin-top: 20px;
-font-size: 22px;
-white-space: pre-line;
-opacity: 0;
-animation: fadeIn 2s forwards;
+  margin-top: 20px;
+  font-size: 22px;
+  white-space: pre-line;
+  opacity: 0;
+  animation: fadeIn 2s forwards;
 }
 
+/* FADE IN */
 @keyframes fadeIn {
-from { opacity: 0; transform: translateY(20px); }
-to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
