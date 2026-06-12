@@ -1,31 +1,40 @@
 let current = 0;
 let answers = [];
-let time = 300;
+let selected = null;
 
 function startTest() {
 document.getElementById("startScreen").classList.add("hidden");
 document.getElementById("testScreen").classList.remove("hidden");
+
+document.getElementById("bgMusic").volume = 0.4;
 document.getElementById("bgMusic").play();
 
 loadQuestion();
-timer();
+startTimer();
 }
 
-function timer() {
-let t = setInterval(() => {
-let m = Math.floor(time / 60);
-let s = time % 60;
-document.getElementById("timer").innerText = `${m}:${s}`;
-time--;
+let time = 300;
 
-if(time < 0) {
+function startTimer() {
+let t = setInterval(() => {
+if (time <= 0) {
 clearInterval(t);
 showResult();
+return;
 }
-},1000);
+
+let m = Math.floor(time / 60);
+let s = time % 60;
+document.getElementById("timer").innerText =
+`${m}:${s < 10 ? "0" + s : s}`;
+
+time--;
+}, 1000);
 }
 
 function loadQuestion() {
+selected = null;
+
 let q = questions[current];
 document.getElementById("qNum").innerText = current + 1;
 
@@ -37,22 +46,35 @@ optBox.innerHTML = "";
 q.options.forEach(opt => {
 let btn = document.createElement("button");
 btn.innerText = opt;
-btn.onclick = () => selectAnswer(opt);
+
+btn.onclick = () => {
+selected = opt;
+
+// highlight selection
+document.querySelectorAll("#options button")
+.forEach(b => b.style.background = "");
+
+btn.style.background = "#4CAF50";
+};
+
 optBox.appendChild(btn);
 });
 }
 
-function selectAnswer(opt) {
-answers.push(questions[current].map[opt]);
+function nextQuestion() {
+if (!selected) {
+alert("Please select an answer");
+return;
 }
 
-function nextQuestion() {
+answers.push(questions[current].map[selected]);
+
 current++;
 
-document.getElementById("progressBar").style.width =
-((current)/questions.length)*100 + "%";
+let progress = (current / questions.length) * 100;
+document.getElementById("progressBar").style.width = progress + "%";
 
-if(current < questions.length) {
+if (current < questions.length) {
 loadQuestion();
 } else {
 showResult();
@@ -63,36 +85,35 @@ function showResult() {
 document.getElementById("testScreen").classList.add("hidden");
 document.getElementById("resultScreen").classList.remove("hidden");
 
-let score = Math.floor(80 + Math.random()*10);
+let score = 82 + Math.floor(Math.random() * 8);
 
-document.getElementById("score").innerText =
-`Overall Score: ${score}/90`;
+document.getElementById("score").innerHTML =
+`<h3>Overall Score: ${score}/90</h3>`;
 
-document.getElementById("loading").innerText =
-"Analyzing language patterns...";
-
-setTimeout(showMessage, 3000);
+setTimeout(() => {
+document.getElementById("loading").style.display = "none";
+showMessage();
+}, 2500);
 }
 
+/* ✨ CINEMATIC MESSAGE SYSTEM */
 function showMessage() {
-
 let msg = `
 Kadhi kadhi vatta ki aapan khup door aahot...
 
 Pan mara dil ma tu roj astos.
 
 Aapan veglya bhashat bolto...
-Gujarati + Marathi mix aahe,
 
-Pan feelings same aahet.
+
+Pan feelings same aahet ❤️
 
 Distance khup ahe...
+Pan connection strong aahe.
 
-Pan connection strong aahe ❤️
+He test grammar sathi navhta...
 
-Ha test grammar sathi navhta...
-
-Ha bas ek excuse hoto...
+He fakt ek excuse hota...
 
 Tula sangaycha hota...
 
@@ -106,9 +127,17 @@ function typeWriter(text) {
 let i = 0;
 let el = document.getElementById("finalMessage");
 
+el.innerHTML = "";
+
 let interval = setInterval(() => {
-el.innerHTML += text[i];
+el.innerHTML += text.charAt(i);
 i++;
-if(i >= text.length) clearInterval(interval);
-},50);
+
+if (i >= text.length) {
+clearInterval(interval);
+
+// fade-in glow effect
+el.style.textShadow = "0 0 15px #ff4d6d";
+}
+}, 35);
 }
