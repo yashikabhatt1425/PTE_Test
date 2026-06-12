@@ -1,20 +1,25 @@
 let current = 0;
 let answers = [];
 let selected = null;
+let time = 300;
+let timerStarted = false;
 
 function startTest() {
-document.getElementById("startScreen").classList.add("hidden");
-document.getElementById("testScreen").classList.remove("hidden");
+document.getElementById("startScreen").style.display = "none";
+document.getElementById("testScreen").style.display = "block";
 
-document.getElementById("bgMusic").volume = 0.4;
+document.getElementById("bgMusic").volume = 0.3;
 document.getElementById("bgMusic").play();
 
 loadQuestion();
+
+if (!timerStarted) {
 startTimer();
+timerStarted = true;
+}
 }
 
-let time = 300;
-
+/* TIMER */
 function startTimer() {
 let t = setInterval(() => {
 if (time <= 0) {
@@ -25,6 +30,7 @@ return;
 
 let m = Math.floor(time / 60);
 let s = time % 60;
+
 document.getElementById("timer").innerText =
 `${m}:${s < 10 ? "0" + s : s}`;
 
@@ -32,12 +38,13 @@ time--;
 }, 1000);
 }
 
+/* LOAD QUESTION */
 function loadQuestion() {
 selected = null;
 
 let q = questions[current];
-document.getElementById("qNum").innerText = current + 1;
 
+document.getElementById("qNum").innerText = current + 1;
 document.getElementById("questionBox").innerText = q.q;
 
 let optBox = document.getElementById("options");
@@ -47,20 +54,25 @@ q.options.forEach(opt => {
 let btn = document.createElement("button");
 btn.innerText = opt;
 
-btn.onclick = () => {
+btn.onclick = function () {
 selected = opt;
 
-// highlight selection
-document.querySelectorAll("#options button")
-.forEach(b => b.style.background = "");
+/* reset all */
+document.querySelectorAll("#options button").forEach(b => {
+b.style.background = "#eee";
+b.style.color = "#000";
+});
 
+/* highlight selected */
 btn.style.background = "#4CAF50";
+btn.style.color = "white";
 };
 
 optBox.appendChild(btn);
 });
 }
 
+/* NEXT */
 function nextQuestion() {
 if (!selected) {
 alert("Please select an answer");
@@ -71,8 +83,8 @@ answers.push(questions[current].map[selected]);
 
 current++;
 
-let progress = (current / questions.length) * 100;
-document.getElementById("progressBar").style.width = progress + "%";
+document.getElementById("progressBar").style.width =
+(current / questions.length) * 100 + "%";
 
 if (current < questions.length) {
 loadQuestion();
@@ -81,40 +93,44 @@ showResult();
 }
 }
 
+/* RESULT */
 function showResult() {
-document.getElementById("testScreen").classList.add("hidden");
-document.getElementById("resultScreen").classList.remove("hidden");
+document.getElementById("testScreen").style.display = "none";
+document.getElementById("resultScreen").style.display = "block";
 
-let score = 82 + Math.floor(Math.random() * 8);
+let score = 80 + Math.floor(Math.random() * 10);
 
 document.getElementById("score").innerHTML =
-`<h3>Overall Score: ${score}/90</h3>`;
+`<h2>Overall Score: ${score}/90</h2>`;
 
-setTimeout(() => {
-document.getElementById("loading").style.display = "none";
-showMessage();
-}, 2500);
+document.getElementById("loading").innerText =
+"Analyzing response patterns...";
+
+setTimeout(showMessage, 2500);
 }
 
-/* ✨ CINEMATIC MESSAGE SYSTEM */
+/* FINAL MESSAGE */
 function showMessage() {
+
+document.getElementById("loading").style.display = "none";
+
 let msg = `
 Kadhi kadhi vatta ki aapan khup door aahot...
 
-Pan mara dil ma tu roj astos.
+Pan mara dil ma tu roj astos ❤️
 
 Aapan veglya bhashat bolto...
 
 Pan feelings same aahet ❤️
 
 Distance khup ahe...
-Pan connection strong aahe.
+Pan connection majboot aahe.
 
 He test grammar sathi navhta...
 
 He fakt ek excuse hota...
 
-Tula sangaycha hota...
+Tula kahi sangaycha hota...
 
 Tu khup special aahes ❤️
 `;
@@ -122,6 +138,7 @@ Tu khup special aahes ❤️
 typeWriter(msg);
 }
 
+/* TYPEWRITER */
 function typeWriter(text) {
 let i = 0;
 let el = document.getElementById("finalMessage");
@@ -134,9 +151,6 @@ i++;
 
 if (i >= text.length) {
 clearInterval(interval);
-
-// fade-in glow effect
-el.style.textShadow = "0 0 15px #ff4d6d";
 }
 }, 35);
 }
