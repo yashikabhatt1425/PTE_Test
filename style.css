@@ -47,6 +47,37 @@ button {
   padding: 10px;
   width: 60%;
 }
+.option-btn {
+    padding: 12px;
+    margin: 8px;
+    border-radius: 10px;
+    border: none;
+    background: #eee;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.option-btn:hover {
+    transform: scale(1.02);
+}
+
+.option-btn.selected {
+    background: #4CAF50;
+    color: white;
+    transform: scale(1.05);
+}
+
+.shake {
+    animation: shake 0.3s;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}
 
 #finalMessage {
 margin-top: 20px;
